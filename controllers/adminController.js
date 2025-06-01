@@ -1,5 +1,8 @@
+const User = require("../models/User");
 const Partner = require("../models/Partner");
+const Inquiry = require("../models/Inquiry");
 
+// Get pending partner verifications
 exports.getPendingVerifications = async (req, res) => {
   try {
     const pending = await Partner.find({ status: "pending" }).populate(
@@ -12,6 +15,7 @@ exports.getPendingVerifications = async (req, res) => {
   }
 };
 
+// Verify or reject a partner
 exports.verifyPartner = async (req, res) => {
   try {
     const { status, comment } = req.body;
@@ -28,7 +32,41 @@ exports.verifyPartner = async (req, res) => {
     partner.adminComment = comment;
     await partner.save();
 
-    res.json({ message: "Partner updated", partner });
+    res.json({ message: `Partner ${status}`, partner });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Platform-wide statistics
+exports.getAdminStats = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const totalPartners = await Partner.countDocuments();
+    const verifiedPartners = await Partner.countDocuments({
+      status: "verified",
+    });
+    const totalInquiries = await Inquiry.countDocuments();
+
+    res.json({
+      totalUsers,
+      totalPartners,
+      verifiedPartners,
+      totalInquiries,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// All inquiries (with user info)
+exports.getAllInquiries = async (req, res) => {
+  try {
+    const inquiries = await Inquiry.find().populate(
+      "userId",
+      "email name role"
+    );
+    res.json(inquiries);
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }

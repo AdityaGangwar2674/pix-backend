@@ -3,6 +3,8 @@ const router = express.Router();
 const {
   getPendingVerifications,
   verifyPartner,
+  getAdminStats,
+  getAllInquiries,
 } = require("../controllers/adminController");
 
 const {
@@ -22,6 +24,15 @@ router.put(
   authMiddleware,
   roleMiddleware("admin"),
   verifyPartner
+);
+
+router.get("/stats", authMiddleware, roleMiddleware("admin"), getAdminStats);
+
+router.get(
+  "/inquiries",
+  authMiddleware,
+  roleMiddleware("admin"),
+  getAllInquiries
 );
 
 module.exports = router;

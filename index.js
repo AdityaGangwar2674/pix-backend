@@ -9,6 +9,7 @@ const { authMiddleware } = require("./middlewares/authMiddleware");
 const partnerRoutes = require("./routes/partnerRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const inquiryRoutes = require("./routes/inquiryRoutes");
+const adminStatsRoutes = require("./routes/adminStatsRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,8 +27,8 @@ app.use(logger);
 app.use("/api/auth", authRoutes);
 app.use("/api/partner", partnerRoutes);
 app.use("/api/admin", adminRoutes);
-
 app.use("/api/inquiry", inquiryRoutes);
+app.use("/api/admin/stats", adminStatsRoutes);
 
 // Test protected route example
 app.get("/api/protected", authMiddleware, (req, res) => {

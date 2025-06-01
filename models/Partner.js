@@ -23,9 +23,9 @@ const partnerSchema = new mongoose.Schema(
     },
     portfolio: [
       {
-        imageUrl: String,
-        description: String,
-        index: Number,
+        imageUrl: { type: String, required: true },
+        description: { type: String },
+        index: { type: Number },
       },
     ],
     status: {
